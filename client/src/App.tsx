@@ -1,5 +1,6 @@
 import React from 'react';
 import Router from './components/Router';
+import UserContextProvider from './components/store/UserProvider';
 import './index.css';
 // import { BlogCrudServiceClient } from './proto/BlogServiceServiceClientPb';
 // import { InsertBlogRequest } from './proto/blogService_pb';
@@ -7,9 +8,9 @@ import './index.css';
 
 function App() {
   return (
-    <>
+    <UserContextProvider>
       <Router />
-    </>
+    </UserContextProvider>
   );
 }
 

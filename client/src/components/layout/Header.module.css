@@ -48,3 +48,28 @@ a {
 .header nav li a:hover{
     color: #eee;
 }
+
+button {
+    outline: none;
+    background: transparent;
+    border: none;
+    padding: 5px 15px;
+    font-size: 25px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.login {
+    color: var(--primaryColor);
+    background-color: #333;
+    transition: 300ms;
+}
+
+.login:hover {
+    background-color: #444;
+}
+
+.register {
+    color: #333;
+    border: thin solid #333;
+}
