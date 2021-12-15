@@ -9,6 +9,30 @@ service BlogCrudService {
     rpc CreateBlog (InsertBlogRequest) returns (InsertBlogResponse) {};
 }
 
+service UserService {
+    rpc SignUserIn (UserInfo) returns (SignInAndUpResponse) {};
+    rpc SignUserUp (UserInfo) returns (SignInAndUpResponse) {};
+}
+
+message User {
+    string id = 1; 
+    string username = 2;
+    string password = 3;
+    string authToken = 4;
+}
+
+message UserInfo {
+    string username = 1;
+    string password = 2;
+}
+
+message SignInAndUpResponse {
+    oneof response {
+        User user = 1;
+        string errorMessage = 2;
+    }
+}
+
 message InsertBlogResponse {
     bool isSuccessful = 1;
 }
