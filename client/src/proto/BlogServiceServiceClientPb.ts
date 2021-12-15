@@ -38,29 +38,29 @@ export class BlogCrudServiceClient {
   methodInfoCreateBlog = new grpcWeb.MethodDescriptor(
     '/blogApp.BlogCrudService/CreateBlog',
     grpcWeb.MethodType.UNARY,
-    blogService_pb.Blog,
-    blogService_pb.BlogInsertionStatus,
-    (request: blogService_pb.Blog) => {
+    blogService_pb.InsertBlogRequest,
+    blogService_pb.InsertBlogResponse,
+    (request: blogService_pb.InsertBlogRequest) => {
       return request.serializeBinary();
     },
-    blogService_pb.BlogInsertionStatus.deserializeBinary
+    blogService_pb.InsertBlogResponse.deserializeBinary
   );
 
   createBlog(
-    request: blogService_pb.Blog,
-    metadata: grpcWeb.Metadata | null): Promise<blogService_pb.BlogInsertionStatus>;
+    request: blogService_pb.InsertBlogRequest,
+    metadata: grpcWeb.Metadata | null): Promise<blogService_pb.InsertBlogResponse>;
 
   createBlog(
-    request: blogService_pb.Blog,
+    request: blogService_pb.InsertBlogRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.RpcError,
-               response: blogService_pb.BlogInsertionStatus) => void): grpcWeb.ClientReadableStream<blogService_pb.BlogInsertionStatus>;
+               response: blogService_pb.InsertBlogResponse) => void): grpcWeb.ClientReadableStream<blogService_pb.InsertBlogResponse>;
 
   createBlog(
-    request: blogService_pb.Blog,
+    request: blogService_pb.InsertBlogRequest,
     metadata: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.RpcError,
-               response: blogService_pb.BlogInsertionStatus) => void) {
+               response: blogService_pb.InsertBlogResponse) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +

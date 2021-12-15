@@ -3,48 +3,48 @@ import * as jspb from 'google-protobuf'
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 
 
-export class BlogInsertionStatus extends jspb.Message {
-  getIsadded(): boolean;
-  setIsadded(value: boolean): BlogInsertionStatus;
+export class InsertBlogResponse extends jspb.Message {
+  getIssuccessful(): boolean;
+  setIssuccessful(value: boolean): InsertBlogResponse;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): BlogInsertionStatus.AsObject;
-  static toObject(includeInstance: boolean, msg: BlogInsertionStatus): BlogInsertionStatus.AsObject;
-  static serializeBinaryToWriter(message: BlogInsertionStatus, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): BlogInsertionStatus;
-  static deserializeBinaryFromReader(message: BlogInsertionStatus, reader: jspb.BinaryReader): BlogInsertionStatus;
+  toObject(includeInstance?: boolean): InsertBlogResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: InsertBlogResponse): InsertBlogResponse.AsObject;
+  static serializeBinaryToWriter(message: InsertBlogResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): InsertBlogResponse;
+  static deserializeBinaryFromReader(message: InsertBlogResponse, reader: jspb.BinaryReader): InsertBlogResponse;
 }
 
-export namespace BlogInsertionStatus {
+export namespace InsertBlogResponse {
   export type AsObject = {
-    isadded: boolean,
+    issuccessful: boolean,
   }
 }
 
-export class Blog extends jspb.Message {
+export class InsertBlogRequest extends jspb.Message {
   getAuthorid(): number;
-  setAuthorid(value: number): Blog;
+  setAuthorid(value: number): InsertBlogRequest;
 
   getBlogtitle(): string;
-  setBlogtitle(value: string): Blog;
+  setBlogtitle(value: string): InsertBlogRequest;
 
   getBlogcontent(): string;
-  setBlogcontent(value: string): Blog;
+  setBlogcontent(value: string): InsertBlogRequest;
 
   getCreationtime(): google_protobuf_timestamp_pb.Timestamp | undefined;
-  setCreationtime(value?: google_protobuf_timestamp_pb.Timestamp): Blog;
+  setCreationtime(value?: google_protobuf_timestamp_pb.Timestamp): InsertBlogRequest;
   hasCreationtime(): boolean;
-  clearCreationtime(): Blog;
+  clearCreationtime(): InsertBlogRequest;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Blog.AsObject;
-  static toObject(includeInstance: boolean, msg: Blog): Blog.AsObject;
-  static serializeBinaryToWriter(message: Blog, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Blog;
-  static deserializeBinaryFromReader(message: Blog, reader: jspb.BinaryReader): Blog;
+  toObject(includeInstance?: boolean): InsertBlogRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: InsertBlogRequest): InsertBlogRequest.AsObject;
+  static serializeBinaryToWriter(message: InsertBlogRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): InsertBlogRequest;
+  static deserializeBinaryFromReader(message: InsertBlogRequest, reader: jspb.BinaryReader): InsertBlogRequest;
 }
 
-export namespace Blog {
+export namespace InsertBlogRequest {
   export type AsObject = {
     authorid: number,
     blogtitle: string,

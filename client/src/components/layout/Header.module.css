@@ -1,0 +1,50 @@
+:root {
+    --primaryColor: #88a9b0; 
+}
+
+a {
+    text-decoration: none;
+}
+
+.header {
+    width: 100vw;
+    height: 10vh;
+    padding: 20px;
+    background-color: var(--primaryColor);
+    display: flex;
+    justify-content: space-between;
+}
+
+.header .logo {
+    color: #333;
+    font-weight: 400;
+    font-size: 40px;
+    margin-left: 20px;
+    border-bottom: thick solid #333;
+}
+
+.header nav {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-right: 25px;
+}
+
+.header nav li {
+    list-style-type: none;
+}
+
+.header nav li a {
+    color: #333;
+    font-size: 30px;
+    padding: 10px;
+    transition: 300ms;
+}
+
+.header nav li a.active {
+    color: #eee;
+}
+
+.header nav li a:hover{
+    color: #eee;
+}
