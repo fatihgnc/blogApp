@@ -6,7 +6,13 @@ import { ProtoGrpcType } from './proto/blogService';
 const PROTO_PATH = './blogService.proto';
 const PORT = 8082;
 
-const packageDef = loader.loadSync(PROTO_PATH);
+const packageDef = loader.loadSync(PROTO_PATH, {
+  keepCase: false,
+  longs: String,
+  enums: String,
+  defaults: true,
+  oneofs: true,
+});
 const grpcObj = grpc.loadPackageDefinition(
   packageDef
 ) as unknown as ProtoGrpcType;
@@ -26,6 +32,6 @@ server.bindAsync(
 server.addService(blogService.service, {
   CreateBlog(call, res) {
     console.log('received call', call.request);
-    res(null, { isAdded: true });
+    res(null, { isSuccessful: true });
   },
 } as BlogCrudServiceHandlers);
