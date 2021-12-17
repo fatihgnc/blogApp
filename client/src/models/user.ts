@@ -1,5 +1,5 @@
 class User {
-  id: number;
+  id: string;
   username: string;
   password: string;
   authToken: string;
@@ -7,7 +7,7 @@ class User {
   constructor(
     username: string,
     password: string,
-    id: number,
+    id: string,
     authToken: string
   ) {
     this.id = id;

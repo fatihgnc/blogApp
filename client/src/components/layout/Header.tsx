@@ -40,20 +40,20 @@ const Header: React.FC = (props) => {
     <nav>
       <li>
         <NavLink
-          to='register'
-          className={({ isActive }) =>
-            isActive === true ? styles.active : ''
-          }>
-          <button className={styles.register}>Register</button>
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
           to='login'
           className={({ isActive }) =>
             isActive === true ? styles.active : ''
           }>
-          <button className={styles.login}>Login</button>
+          <button className={styles.register}>Login</button>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to='register'
+          className={({ isActive }) =>
+            isActive === true ? styles.active : ''
+          }>
+          <button className={styles.login}>Register</button>
         </NavLink>
       </li>
     </nav>
