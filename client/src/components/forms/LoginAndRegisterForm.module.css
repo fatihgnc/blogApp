@@ -11,7 +11,7 @@ input {
 }
 
 input:focus {
-  border-bottom: thin solid black;
+  border-bottom: thin solid #88a9b0;
 }
 
 .login-form {
@@ -21,6 +21,7 @@ input:focus {
   background-color: #88a9b057;
   border-radius: 10px;
   padding: 15px;
+  transition: all 300ms;
 }
 
 .login-form__title {
@@ -48,6 +49,10 @@ div {
   margin-bottom: 20px;
 }
 
+label.checkbox {
+  margin-top: 12px;
+}
+
 label.checkbox input {
   position: absolute;
   left: -9999px;
@@ -55,9 +60,8 @@ label.checkbox input {
 
 label.checkbox .text {
   font: 12px/14px;
-  color: #555;
   position: relative;
-  top: -8px;
+  top: -10px;
   margin-left: 10px;
 }
 

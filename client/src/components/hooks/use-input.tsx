@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const useInput = (
+  validationMessage: string,
   initValue: string | boolean,
   validate: (input: string) => boolean
 ) => {
@@ -35,6 +36,7 @@ const useInput = (
     inputValue: enteredInput,
     inputIsValid: valueIsValid || null,
     inputHasError: hasError,
+    valMessage: validationMessage,
     onChange: changeHandler,
     onBlur: blurHandler,
     resetInput: resetValue,
