@@ -26,6 +26,7 @@ a {
   justify-content: space-evenly;
   align-items: center;
   margin-right: 25px;
+  gap: 1.5em;
 }
 
 .header nav li {
@@ -34,17 +35,14 @@ a {
 
 .header nav li a {
   color: #333;
-  font-size: 30px;
+  font-size: 25px;
   padding: 10px;
   transition: 300ms;
 }
 
-.header nav li a.active {
-  color: #eee;
-}
-
+.header nav li a.active,
 .header nav li a:hover {
-  color: #eee;
+  color: orange;
 }
 
 button {

@@ -23,7 +23,7 @@ export const UserContext = React.createContext<UserContextObj>({
 
 const UserContextProvider: React.FC = (props) => {
   const [user, setUser] = useState<User>();
-  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [isAuth, setIsAuth] = useState<boolean>(true);
 
   const signInAndUpHandler = (
     method: 'SUP' | 'SIN',
