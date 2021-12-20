@@ -40,7 +40,7 @@ const Header: React.FC = (props) => {
     <nav>
       <li>
         <NavLink
-          to='login'
+          to='auth?q=login'
           className={({ isActive }) =>
             isActive === true ? styles.active : ''
           }>
@@ -49,7 +49,7 @@ const Header: React.FC = (props) => {
       </li>
       <li>
         <NavLink
-          to='register'
+          to='auth?q=register'
           className={({ isActive }) =>
             isActive === true ? styles.active : ''
           }>

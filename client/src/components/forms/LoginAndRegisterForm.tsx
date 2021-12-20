@@ -137,15 +137,7 @@ const LoginAndRegisterForm = () => {
           onBlur={unameOnBlur}
         />
         {usernameHasError && (
-          <span
-            style={{
-              color: 'red',
-              marginTop: '5px',
-              display: 'inline-block',
-              fontSize: '14px',
-            }}>
-            {usernameValidationMessage}
-          </span>
+          <span className={styles.invalid}>{usernameValidationMessage}</span>
         )}
       </div>
       <div>
@@ -158,15 +150,7 @@ const LoginAndRegisterForm = () => {
           onBlur={pswOnBlur}
         />
         {passwordHasError && (
-          <span
-            style={{
-              color: 'red',
-              marginTop: '5px',
-              display: 'inline-block',
-              fontSize: '14px',
-            }}>
-            {passwordValidationMessage}
-          </span>
+          <span className={styles.invalid}>{passwordValidationMessage}</span>
         )}
       </div>
       <button type='submit' className={styles['login-btn']}>
@@ -186,13 +170,7 @@ const LoginAndRegisterForm = () => {
           onBlur={registrationUnameOnBlur}
         />
         {registrationUsernameHasError && (
-          <span
-            style={{
-              color: 'red',
-              marginTop: '5px',
-              display: 'inline-block',
-              fontSize: '14px',
-            }}>
+          <span className={styles.invalid}>
             {registrationUsernameValidationMessage}
           </span>
         )}
@@ -208,13 +186,7 @@ const LoginAndRegisterForm = () => {
           onBlur={registrationPswOnBlur}
         />
         {registrationPasswordHasError && (
-          <span
-            style={{
-              color: 'red',
-              marginTop: '5px',
-              display: 'inline-block',
-              fontSize: '14px',
-            }}>
+          <span className={styles.invalid}>
             {registrationPasswordValidationMessage}
           </span>
         )}
@@ -230,13 +202,7 @@ const LoginAndRegisterForm = () => {
           onBlur={confRegistrationPswOnBlur}
         />
         {confRegistrationPasswordHasError && (
-          <span
-            style={{
-              color: 'red',
-              marginTop: '5px',
-              display: 'inline-block',
-              fontSize: '14px',
-            }}>
+          <span className={styles.invalid}>
             {confRegistrationValidationMessage}
           </span>
         )}
@@ -248,26 +214,34 @@ const LoginAndRegisterForm = () => {
   );
 
   return (
-    <div className={styles['login-form']}>
-      <h1 className={styles['login-form__title']}>
-        {isLogin ? 'Login' : 'Register'}
-      </h1>
-      <form onSubmit={handleSubmission}>{loginOrRegister}</form>
-      <label className={styles.checkbox}>
-        <input
-          type='checkbox'
-          checked={isLogin}
-          onChange={(e) => {
-            setIsLogin((prev) => !prev);
-          }}
-        />
-        <span className={styles.checkbox} style={{ left: '20px' }}>
-          <span></span>
-        </span>
-        <span className={styles.text} style={{ marginLeft: '30px' }}>
-          {isLogin ? 'Go to register' : 'Go to login'}
-        </span>
-      </label>
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'grid',
+        placeItems: 'center',
+      }}>
+      <div className={styles['login-form']}>
+        <h1 className={styles['login-form__title']}>
+          {isLogin ? 'Login' : 'Register'}
+        </h1>
+        <form onSubmit={handleSubmission}>{loginOrRegister}</form>
+        <label className={styles.checkbox}>
+          <input
+            type='checkbox'
+            checked={isLogin}
+            onChange={(e) => {
+              setIsLogin((prev) => !prev);
+            }}
+          />
+          <span className={styles.checkbox} style={{ left: '20px' }}>
+            <span></span>
+          </span>
+          <span className={styles.text} style={{ marginLeft: '30px' }}>
+            {isLogin ? 'Go to register' : 'Go to login'}
+          </span>
+        </label>
+      </div>
     </div>
   );
 };
