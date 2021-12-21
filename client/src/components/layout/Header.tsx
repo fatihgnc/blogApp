@@ -35,6 +35,14 @@ const Header: React.FC = (props) => {
           Friends
         </NavLink>
       </li>
+      <li>
+        <button
+          onClick={() =>
+            userContext.logUserOut(userContext.authToken as string)
+          }>
+          Logout
+        </button>
+      </li>
     </nav>
   ) : (
     <nav>

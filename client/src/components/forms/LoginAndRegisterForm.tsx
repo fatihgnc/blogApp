@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import useInput from '../hooks/use-input';
+import { UserContext } from '../store/UserProvider';
 
 import styles from './LoginAndRegisterForm.module.css';
 
 const LoginAndRegisterForm = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const userCtx = useContext(UserContext);
 
   const search = useLocation().search;
   const params = new URLSearchParams(search);
@@ -89,6 +91,15 @@ const LoginAndRegisterForm = () => {
     (input) => input === registrationPassword
   );
 
+  const sendSignupRequest = () => {
+    userCtx.signUserInOrUp(
+      'SUP',
+      registrationUsername as string,
+      registrationPassword as string
+    );
+  };
+
+  // handling form validity
   let loginFormValidity = false;
   let registrationFormValidity = false;
 
@@ -207,7 +218,10 @@ const LoginAndRegisterForm = () => {
           </span>
         )}
       </div>
-      <button type='submit' className={styles['login-btn']}>
+      <button
+        type='submit'
+        className={styles['login-btn']}
+        onClick={sendSignupRequest}>
         Register
       </button>
     </>
