@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// import "google/protobuf/empty.proto";
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 package blogApp;
@@ -12,6 +12,7 @@ service BlogCrudService {
 service UserService {
     rpc SignUserIn (UserInfo) returns (SignInAndUpResponse) {};
     rpc SignUserUp (UserInfo) returns (SignInAndUpResponse) {};
+    rpc LogUserOut (Token) returns (google.protobuf.Empty) {};
 }
 
 message UserInfo {
@@ -24,6 +25,10 @@ message SignInAndUpResponse {
         string authToken = 1;
         string errorMessage = 2;
     }
+}
+
+message Token {
+    string authToken = 1;
 }
 
 message InsertBlogResponse {
