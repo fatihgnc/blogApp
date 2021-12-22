@@ -3,36 +3,6 @@ import * as jspb from 'google-protobuf'
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 
 
-export class User extends jspb.Message {
-  getId(): string;
-  setId(value: string): User;
-
-  getUsername(): string;
-  setUsername(value: string): User;
-
-  getPassword(): string;
-  setPassword(value: string): User;
-
-  getAuthtoken(): string;
-  setAuthtoken(value: string): User;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): User.AsObject;
-  static toObject(includeInstance: boolean, msg: User): User.AsObject;
-  static serializeBinaryToWriter(message: User, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): User;
-  static deserializeBinaryFromReader(message: User, reader: jspb.BinaryReader): User;
-}
-
-export namespace User {
-  export type AsObject = {
-    id: string,
-    username: string,
-    password: string,
-    authtoken: string,
-  }
-}
-
 export class UserInfo extends jspb.Message {
   getUsername(): string;
   setUsername(value: string): UserInfo;
@@ -56,10 +26,8 @@ export namespace UserInfo {
 }
 
 export class SignInAndUpResponse extends jspb.Message {
-  getUser(): User | undefined;
-  setUser(value?: User): SignInAndUpResponse;
-  hasUser(): boolean;
-  clearUser(): SignInAndUpResponse;
+  getAuthtoken(): string;
+  setAuthtoken(value: string): SignInAndUpResponse;
 
   getErrormessage(): string;
   setErrormessage(value: string): SignInAndUpResponse;
@@ -76,13 +44,13 @@ export class SignInAndUpResponse extends jspb.Message {
 
 export namespace SignInAndUpResponse {
   export type AsObject = {
-    user?: User.AsObject,
+    authtoken: string,
     errormessage: string,
   }
 
   export enum ResponseCase { 
     RESPONSE_NOT_SET = 0,
-    USER = 1,
+    AUTHTOKEN = 1,
     ERRORMESSAGE = 2,
   }
 }

@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import User from '../../models/user';
 import { UserServiceClient } from '../../proto/BlogServiceServiceClientPb';
 import { UserInfo } from '../../proto/blogService_pb';
-
-const client = new UserServiceClient('http://localhost:8080');
+import jwt from 'jsonwebtoken';
 
 type UserContextObj = {
   isAuth: boolean;
@@ -18,6 +17,8 @@ type UserContextObj = {
   logUserOut: (authToken: string) => void;
 };
 
+const client = new UserServiceClient('http://localhost:8080');
+
 export const UserContext = React.createContext<UserContextObj>({
   isAuth: false,
   authToken: '',
@@ -28,10 +29,13 @@ export const UserContext = React.createContext<UserContextObj>({
 
 const UserContextProvider: React.FC = (props) => {
   const authToken = localStorage.getItem('authToken');
-  console.log(authToken);
-  const [user, setUser] = useState<User>();
+  const userPayload = jwt.verify(authToken as string, 'mykey');
+
+  const [user, setUser] = useState<User | null>(userPayload as unknown as User);
   const [isAuth, setIsAuth] = useState<boolean>(authToken ? true : false);
+
   const navigate = useNavigate();
+
   console.log(isAuth);
 
   const signInAndUpHandler = (
@@ -48,16 +52,17 @@ const UserContextProvider: React.FC = (props) => {
       client.signUserIn(signInOrUpReq, null, (err, res) => {
         if (err) return console.log(err);
 
-        const { errormessage: errMessage, user } = res.toObject();
+        const { errormessage: errMessage, authtoken: jwtToken } =
+          res.toObject();
 
-        if (errMessage.length > 0) {
+        if (errMessage) {
           console.log(errMessage);
           return navigate('auth?q=login');
         }
 
-        setUser(user as unknown as User);
-        localStorage.setItem('authToken', user?.username as string);
-        setIsAuth(authToken !== '' ? true : false);
+        setUser(user as User);
+        localStorage.setItem('authToken', jwtToken);
+        setIsAuth(true);
         navigate('/');
         console.log(user);
       });
@@ -67,18 +72,18 @@ const UserContextProvider: React.FC = (props) => {
     client.signUserUp(signInOrUpReq, null, (err, res) => {
       if (err) return console.log(err);
 
-      const { errormessage: errMessage, user } = res.toObject();
+      const { errormessage: errMessage, authtoken: jwtToken } = res.toObject();
 
-      if (errMessage.length > 0) {
-        console.log(errMessage);
-        return navigate('auth?q=login');
-      }
+      if (errMessage.trim().length > 0) return navigate('auth?q=register');
 
-      setUser(user as unknown as User);
-      localStorage.setItem('authToken', user?.username as string);
-      setIsAuth(authToken !== '' ? true : false);
-      navigate('/');
+      const payload = jwt.verify(jwtToken, 'mykey');
+      console.log(payload);
+
+      setUser(payload as User);
+      localStorage.setItem('authToken', jwtToken);
+      setIsAuth(true);
       console.log(user);
+      navigate('/');
     });
   };
 

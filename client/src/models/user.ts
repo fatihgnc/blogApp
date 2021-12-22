@@ -1,19 +1,22 @@
 class User {
-  id: string;
+  _id: string;
   username: string;
   password: string;
-  authToken: string;
+  blogCount: number;
+  // blogs: Blog[];
 
   constructor(
+    _id: string,
     username: string,
     password: string,
-    id: string,
-    authToken: string
+    blogCount: number
+    // blogs: Blog[],
   ) {
-    this.id = id;
+    this._id = _id;
     this.username = username;
     this.password = password;
-    this.authToken = authToken;
+    this.blogCount = blogCount;
+    // this.blogs = blogs;
   }
 }
 
