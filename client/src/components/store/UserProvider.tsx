@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import User from '../../models/user';
 import { UserServiceClient } from '../../proto/BlogServiceServiceClientPb';
@@ -27,12 +27,29 @@ export const UserContext = React.createContext<UserContextObj>({
   logUserOut: () => {},
 });
 
-const UserContextProvider: React.FC = (props) => {
-  const authToken = localStorage.getItem('authToken');
-  const userPayload = jwt.verify(authToken as string, 'mykey');
+const removeTokenFromLS = () => localStorage.removeItem('authToken');
+const setTokenInLS = (token: string) =>
+  localStorage.setItem('authToken', token);
+const getTokenFromLS = () => localStorage.getItem('authToken');
 
-  const [user, setUser] = useState<User | null>(userPayload as unknown as User);
+const UserContextProvider: React.FC = (props) => {
+  const authToken = getTokenFromLS();
+
+  const [user, setUser] = useState<User | null>();
   const [isAuth, setIsAuth] = useState<boolean>(authToken ? true : false);
+
+  useEffect(() => {
+    if (authToken) {
+      jwt.verify(authToken as string, 'mykey', (err, userPayload) => {
+        if (err) {
+          removeTokenFromLS();
+          return console.log(err);
+        }
+
+        setUser(userPayload as User);
+      });
+    }
+  }, [authToken]);
 
   const navigate = useNavigate();
 
@@ -60,13 +77,12 @@ const UserContextProvider: React.FC = (props) => {
           return navigate('auth?q=login');
         }
 
+        setTokenInLS(jwtToken);
         setUser(user as User);
-        localStorage.setItem('authToken', jwtToken);
         setIsAuth(true);
-        navigate('/');
-        console.log(user);
+
+        return navigate('/');
       });
-      return;
     }
 
     client.signUserUp(signInOrUpReq, null, (err, res) => {
@@ -74,21 +90,23 @@ const UserContextProvider: React.FC = (props) => {
 
       const { errormessage: errMessage, authtoken: jwtToken } = res.toObject();
 
-      if (errMessage.trim().length > 0) return navigate('auth?q=register');
-
+      if (errMessage.trim().length > 0) {
+        console.log(errMessage);
+        return navigate('auth?q=register');
+      }
       const payload = jwt.verify(jwtToken, 'mykey');
       console.log(payload);
 
+      setTokenInLS(jwtToken);
       setUser(payload as User);
-      localStorage.setItem('authToken', jwtToken);
       setIsAuth(true);
-      console.log(user);
+
       navigate('/');
     });
   };
 
   const logoutHandler = () => {
-    localStorage.removeItem('authToken');
+    removeTokenFromLS();
     setIsAuth(false);
     return navigate('auth?q=login');
   };

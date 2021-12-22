@@ -1,18 +1,17 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import MainContent from '../layout/MainContent';
 import { UserContext } from '../store/UserProvider';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
 
-  const mainContent = !userContext.isAuth ? (
-    <div
-      style={{
-        backgroundColor: 'rgba(255,255,255,.85)',
-        padding: '50px',
-        width: '50%',
-      }}>
+  const mainContentComponent = !userContext.isAuth ? (
+    <MainContent
+      backgroundColor='rgba(255,255,255,.85)'
+      width='50%'
+      padding='50px'>
       <h1 style={{ marginBottom: '15px' }}>Welcome to fBlog!</h1>
       <section>
         <p>
@@ -50,30 +49,18 @@ const HomeScreen = () => {
         }}>
         Let's start!
       </button>
-    </div>
+    </MainContent>
   ) : (
-    <div
-      style={{
-        backgroundColor: 'rgba(255,255,255,.85)',
-        padding: '50px',
-        width: '50%',
-      }}>
+    <MainContent
+      backgroundColor='rgba(255,255,255,.85)'
+      width='50%'
+      padding='50px'>
       Here is your main page! Your info:
       {JSON.stringify(userContext.user)}
-    </div>
+    </MainContent>
   );
 
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'grid',
-        placeItems: 'center',
-      }}>
-      {mainContent}
-    </div>
-  );
+  return mainContentComponent;
 };
 
 export default HomeScreen;
