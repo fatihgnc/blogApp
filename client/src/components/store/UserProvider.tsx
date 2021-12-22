@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import User from '../../models/user';
 import { UserServiceClient } from '../../proto/BlogServiceServiceClientPb';
-import { UserInfo } from '../../proto/blogService_pb';
+import { Token, UserInfo } from '../../proto/blogService_pb';
 import jwt from 'jsonwebtoken';
 
 type UserContextObj = {
@@ -53,7 +53,7 @@ const UserContextProvider: React.FC = (props) => {
 
   const navigate = useNavigate();
 
-  console.log(isAuth);
+  // console.log(isAuth);
 
   const signInAndUpHandler = (
     method: 'SUP' | 'SIN',
@@ -75,10 +75,9 @@ const UserContextProvider: React.FC = (props) => {
         if (errMessage) return console.log(errMessage);
 
         const payload = jwt.verify(jwtToken, 'mykey');
-        console.log(payload);
 
         setTokenInLS(jwtToken);
-        setUser(user as User);
+        setUser(payload as User);
         setIsAuth(true);
 
         navigate('/');
@@ -93,7 +92,6 @@ const UserContextProvider: React.FC = (props) => {
         if (errMessage.trim().length > 0) return console.log(errMessage);
 
         const payload = jwt.verify(jwtToken, 'mykey');
-        console.log(payload);
 
         setTokenInLS(jwtToken);
         setUser(payload as User);
@@ -105,8 +103,18 @@ const UserContextProvider: React.FC = (props) => {
   };
 
   const logoutHandler = () => {
+    // create request
+    const token = new Token();
+    token.setAuthtoken(authToken as string);
+
+    // send request
+    client.logUserOut(token, null, (err, res) =>
+      err ? console.log(err) : null
+    );
+
     removeTokenFromLS();
     setIsAuth(false);
+
     return navigate('auth?q=login');
   };
 

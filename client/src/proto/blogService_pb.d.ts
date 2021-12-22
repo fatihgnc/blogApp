@@ -1,5 +1,6 @@
 import * as jspb from 'google-protobuf'
 
+import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 
 
@@ -52,6 +53,24 @@ export namespace SignInAndUpResponse {
     RESPONSE_NOT_SET = 0,
     AUTHTOKEN = 1,
     ERRORMESSAGE = 2,
+  }
+}
+
+export class Token extends jspb.Message {
+  getAuthtoken(): string;
+  setAuthtoken(value: string): Token;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Token.AsObject;
+  static toObject(includeInstance: boolean, msg: Token): Token.AsObject;
+  static serializeBinaryToWriter(message: Token, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Token;
+  static deserializeBinaryFromReader(message: Token, reader: jspb.BinaryReader): Token;
+}
+
+export namespace Token {
+  export type AsObject = {
+    authtoken: string,
   }
 }
 
