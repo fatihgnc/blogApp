@@ -1,13 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useInput from '../hooks/use-input';
 import { UserContext } from '../store/UserProvider';
 
 import styles from './LoginAndRegisterForm.module.css';
 
 const LoginAndRegisterForm = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  // check if any user is authenticated
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const [isLogin, setIsLogin] = useState(true);
 
   const search = useLocation().search;
   const params = new URLSearchParams(search);
@@ -15,6 +18,7 @@ const LoginAndRegisterForm = () => {
   const query = params.get('q');
 
   useEffect(() => {
+    if (userCtx.authToken) return navigate('/');
     if (!query || !['register', 'login'].includes(query)) {
       setIsLogin(true);
     } else if (query === 'login') {
@@ -22,7 +26,7 @@ const LoginAndRegisterForm = () => {
     } else {
       setIsLogin(false);
     }
-  }, [query]);
+  }, [query, userCtx.authToken, navigate]);
 
   // LOGIN FORM INPUTS
   const {
@@ -91,11 +95,20 @@ const LoginAndRegisterForm = () => {
     (input) => input === registrationPassword
   );
 
+  // SIGN IN AND UP FUNCTIONS
   const sendSignupRequest = () => {
     userCtx.signUserInOrUp(
       'SUP',
       registrationUsername as string,
       registrationPassword as string
+    );
+  };
+
+  const sendSignInRequest = () => {
+    userCtx.signUserInOrUp(
+      'SIN',
+      enteredUsername as string,
+      enteredPassword as string
     );
   };
 
@@ -164,7 +177,10 @@ const LoginAndRegisterForm = () => {
           <span className={styles.invalid}>{passwordValidationMessage}</span>
         )}
       </div>
-      <button type='submit' className={styles['login-btn']}>
+      <button
+        type='submit'
+        className={styles['login-btn']}
+        onClick={sendSignInRequest}>
         Login
       </button>
     </>

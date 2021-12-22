@@ -72,37 +72,36 @@ const UserContextProvider: React.FC = (props) => {
         const { errormessage: errMessage, authtoken: jwtToken } =
           res.toObject();
 
-        if (errMessage) {
-          console.log(errMessage);
-          return navigate('auth?q=login');
-        }
+        if (errMessage) return console.log(errMessage);
+
+        const payload = jwt.verify(jwtToken, 'mykey');
+        console.log(payload);
 
         setTokenInLS(jwtToken);
         setUser(user as User);
         setIsAuth(true);
 
-        return navigate('/');
+        navigate('/');
+      });
+    } else {
+      client.signUserUp(signInOrUpReq, null, (err, res) => {
+        if (err) return console.log(err);
+
+        const { errormessage: errMessage, authtoken: jwtToken } =
+          res.toObject();
+
+        if (errMessage.trim().length > 0) return console.log(errMessage);
+
+        const payload = jwt.verify(jwtToken, 'mykey');
+        console.log(payload);
+
+        setTokenInLS(jwtToken);
+        setUser(payload as User);
+        setIsAuth(true);
+
+        navigate('/');
       });
     }
-
-    client.signUserUp(signInOrUpReq, null, (err, res) => {
-      if (err) return console.log(err);
-
-      const { errormessage: errMessage, authtoken: jwtToken } = res.toObject();
-
-      if (errMessage.trim().length > 0) {
-        console.log(errMessage);
-        return navigate('auth?q=register');
-      }
-      const payload = jwt.verify(jwtToken, 'mykey');
-      console.log(payload);
-
-      setTokenInLS(jwtToken);
-      setUser(payload as User);
-      setIsAuth(true);
-
-      navigate('/');
-    });
   };
 
   const logoutHandler = () => {
