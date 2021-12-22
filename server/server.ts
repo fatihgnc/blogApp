@@ -4,8 +4,8 @@ import { BlogCrudServiceHandlers } from './proto/blogApp/BlogCrudService';
 import { UserServiceHandlers } from './proto/blogApp/UserService';
 import { ProtoGrpcType } from './proto/blogService';
 import { connectMongo } from './db/mongoose';
-import { signUserIn, signUserUp } from './auth/auth';
-import { User } from './proto/blogApp/User';
+import { signUserIn, signUserUp, logUserOut } from './auth/auth';
+// import { User } from './proto/blogApp/User';
 
 const PROTO_PATH = './blogService.proto';
 const PORT = 8082;
@@ -71,5 +71,12 @@ server.addService(userService.service, {
     // console.log(retValue);
 
     return res(null, { authToken: retValue.token });
+  },
+  LogUserOut: async (call, res) => {
+    console.log('received the logout call');
+    const { authToken } = call.request;
+    if (!authToken) return;
+    await logUserOut(authToken);
+    return res(null);
   },
 } as UserServiceHandlers);

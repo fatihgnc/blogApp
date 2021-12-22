@@ -2,7 +2,7 @@ import grpc from '@grpc/grpc-js';
 import { UserModel } from '../db/mongoose';
 import { UserInfo__Output } from '../proto/blogApp/UserInfo';
 import { SignInAndUpResponse } from '../proto/blogApp/SignInAndUpResponse';
-import { signJWT } from './jwt';
+import { jwtUser, signJWT, verifyJWT } from './jwt';
 
 export async function signUserUp(
   call: grpc.ServerUnaryCall<UserInfo__Output, SignInAndUpResponse>
@@ -77,5 +77,32 @@ export async function signUserIn(
     return { err: null, token: authToken };
   } catch (err) {
     return { err, token: null };
+  }
+}
+
+export async function logUserOut(authToken: string) {
+  // check token
+  if (!authToken) return 'authToken is required!';
+  // verify token
+  const payload = verifyJWT(authToken) as jwtUser;
+  // verify payload
+  if (!payload) return 'invalid token';
+  // get username from token
+  const { username } = payload;
+  // query user
+  try {
+    const user = await UserModel.findOne({ username }).exec();
+    // check user
+    if (!user) {
+      return 'no user exists with this username';
+    }
+    // delete it's authtoken field
+    user.authToken = undefined;
+    // save it
+    await user.save();
+
+    return 'deleted auth token successfully';
+  } catch (err) {
+    throw err;
   }
 }

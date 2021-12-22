@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-type jwtUser = {
+export type jwtUser = {
   _id: string;
   username: string;
   password: string;
