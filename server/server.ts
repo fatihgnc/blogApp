@@ -4,7 +4,7 @@ import { BlogCrudServiceHandlers } from './proto/blogApp/BlogCrudService';
 import { UserServiceHandlers } from './proto/blogApp/UserService';
 import { ProtoGrpcType } from './proto/blogService';
 import { connectMongo } from './db/mongoose';
-import { signUserUp } from './auth/auth';
+import { signUserIn, signUserUp } from './auth/auth';
 import { User } from './proto/blogApp/User';
 
 const PROTO_PATH = './blogService.proto';
@@ -59,5 +59,17 @@ server.addService(userService.service, {
 
     return res(null, { authToken: retValue.token });
   },
-  SignUserIn: (call, res) => {},
+  SignUserIn: async (call, res) => {
+    console.log('received the signin call!');
+
+    const retValue = await signUserIn(call);
+
+    if (retValue.err) {
+      return res(null, { errorMessage: JSON.stringify(retValue.err) });
+    }
+
+    // console.log(retValue);
+
+    return res(null, { authToken: retValue.token });
+  },
 } as UserServiceHandlers);
