@@ -14,11 +14,13 @@ export interface ProtoGrpcType {
     InsertBlogRequest: MessageTypeDefinition
     InsertBlogResponse: MessageTypeDefinition
     SignInAndUpResponse: MessageTypeDefinition
+    Token: MessageTypeDefinition
     UserInfo: MessageTypeDefinition
     UserService: SubtypeConstructor<typeof grpc.Client, _blogApp_UserServiceClient> & { service: _blogApp_UserServiceDefinition }
   }
   google: {
     protobuf: {
+      Empty: MessageTypeDefinition
       Timestamp: MessageTypeDefinition
     }
   }
