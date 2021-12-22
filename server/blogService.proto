@@ -14,13 +14,6 @@ service UserService {
     rpc SignUserUp (UserInfo) returns (SignInAndUpResponse) {};
 }
 
-message User {
-    string id = 1; 
-    string username = 2;
-    string password = 3;
-    string authToken = 4;
-}
-
 message UserInfo {
     string username = 1;
     string password = 2;
@@ -28,7 +21,7 @@ message UserInfo {
 
 message SignInAndUpResponse {
     oneof response {
-        User user = 1;
+        string authToken = 1;
         string errorMessage = 2;
     }
 }

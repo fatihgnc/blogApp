@@ -3,7 +3,9 @@ import * as loader from '@grpc/proto-loader';
 import { BlogCrudServiceHandlers } from './proto/blogApp/BlogCrudService';
 import { UserServiceHandlers } from './proto/blogApp/UserService';
 import { ProtoGrpcType } from './proto/blogService';
-import { connectMongo, Blog, User } from './db/mongoose';
+import { connectMongo } from './db/mongoose';
+import { signUserUp } from './auth/auth';
+import { User } from './proto/blogApp/User';
 
 const PROTO_PATH = './blogService.proto';
 const PORT = 8082;
@@ -47,30 +49,15 @@ server.addService(userService.service, {
   SignUserUp: async (call, res) => {
     console.log('received the signup call!');
 
-    const { username, password } = call.request;
+    const retValue = await signUserUp(call);
 
-    if (!username || !password) {
-      return res(null, {
-        errorMessage: 'both username and password are required!',
-      });
+    if (retValue.err) {
+      return res(null, { errorMessage: JSON.stringify(retValue.err) });
     }
 
-    const user = new User({ username, password });
+    // console.log(retValue);
 
-    try {
-      const savedUser = await user.save();
-
-      return res(null, {
-        user: {
-          id: savedUser._id.toString(),
-          username,
-          password,
-          authToken: '143t89gvaus98gau89q',
-        },
-      });
-    } catch (error) {
-      return res(null, { errorMessage: error });
-    }
+    return res(null, { authToken: retValue.token });
   },
   SignUserIn: (call, res) => {},
 } as UserServiceHandlers);

@@ -1,9 +1,10 @@
 import { Types, Schema, model, connect } from 'mongoose';
 
-interface UserObj {
+export interface UserObj {
   username: string;
   password: string;
   blogCount: number;
+  authToken: string;
 }
 
 interface BlogObj {
@@ -32,6 +33,9 @@ const userSchema = new Schema<UserObj>({
     type: Number,
     default: 0,
   },
+  authToken: {
+    type: String,
+  },
 });
 
 const blogSchema = new Schema<BlogObj>({
@@ -57,11 +61,11 @@ const blogSchema = new Schema<BlogObj>({
   },
 });
 
-const User = model<UserObj>('User', userSchema);
-const Blog = model<BlogObj>('Blog', blogSchema);
+const UserModel = model<UserObj>('User', userSchema);
+const BlogModel = model<BlogObj>('Blog', blogSchema);
 
 async function run(): Promise<void> {
   await connect('mongodb://localhost:27017/blogApp');
 }
 
-export { User, Blog, run as connectMongo };
+export { UserModel, BlogModel, run as connectMongo };

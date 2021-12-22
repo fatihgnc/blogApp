@@ -6,6 +6,7 @@ export interface User {
   'username'?: (string);
   'password'?: (string);
   'authToken'?: (string);
+  'blogCount'?: (number);
 }
 
 export interface User__Output {
@@ -13,4 +14,5 @@ export interface User__Output {
   'username'?: (string);
   'password'?: (string);
   'authToken'?: (string);
+  'blogCount'?: (number);
 }

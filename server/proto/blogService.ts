@@ -14,7 +14,6 @@ export interface ProtoGrpcType {
     InsertBlogRequest: MessageTypeDefinition
     InsertBlogResponse: MessageTypeDefinition
     SignInAndUpResponse: MessageTypeDefinition
-    User: MessageTypeDefinition
     UserInfo: MessageTypeDefinition
     UserService: SubtypeConstructor<typeof grpc.Client, _blogApp_UserServiceClient> & { service: _blogApp_UserServiceDefinition }
   }
