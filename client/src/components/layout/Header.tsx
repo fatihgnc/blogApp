@@ -28,11 +28,11 @@ const Header: React.FC = (props) => {
       </li>
       <li>
         <NavLink
-          to='friends'
+          to='profile'
           className={({ isActive }) =>
             isActive === true ? styles.active : ''
           }>
-          Friends
+          Profile
         </NavLink>
       </li>
       <li>

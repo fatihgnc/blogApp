@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MainContent: React.FC<{
+const MainContentWrapper: React.FC<{
   backgroundColor: string;
   padding: string;
   width: string;
@@ -25,4 +25,4 @@ const MainContent: React.FC<{
   );
 };
 
-export default MainContent;
+export default MainContentWrapper;

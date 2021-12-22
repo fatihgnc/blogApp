@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import MainContent from '../layout/MainContent';
+import MainContentWrapper from '../layout/MainContentWrapper';
+import MainContent from '../layout/MainContentWrapper';
 import { UserContext } from '../store/UserProvider';
 
 const HomeScreen = () => {
@@ -8,7 +9,7 @@ const HomeScreen = () => {
   const userContext = useContext(UserContext);
 
   const mainContentComponent = !userContext.isAuth ? (
-    <MainContent
+    <MainContentWrapper
       backgroundColor='rgba(255,255,255,.85)'
       width='50%'
       padding='50px'>
@@ -49,7 +50,7 @@ const HomeScreen = () => {
         }}>
         Let's start!
       </button>
-    </MainContent>
+    </MainContentWrapper>
   ) : (
     <MainContent
       backgroundColor='rgba(255,255,255,.85)'
