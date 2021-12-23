@@ -24,7 +24,7 @@ export async function signUserUp(
   const { blogCount, _id } = user;
 
   const authToken = signJWT({
-    _id: _id.toString(),
+    _id,
     username,
     password,
     blogCount,
@@ -65,7 +65,7 @@ export async function signUserIn(
     const { blogCount, _id } = user;
 
     const authToken = signJWT({
-      _id: _id.toString(),
+      _id,
       username,
       password,
       blogCount,
@@ -105,4 +105,14 @@ export async function logUserOut(authToken: string) {
   } catch (err) {
     throw err;
   }
+}
+
+export async function getUserFromToken(authToken: string) {
+  // get the user payload from token and extract the id
+  const userPayload = verifyJWT(authToken) as jwtUser;
+  const { _id } = userPayload;
+
+  // query the user with id
+  const user = await UserModel.findById(_id).exec();
+  return user;
 }

@@ -5,6 +5,8 @@ export type jwtUser = {
   username: string;
   password: string;
   blogCount: number;
+  iat?: number;
+  exp?: number;
 };
 
 export function signJWT(data: jwtUser) {
