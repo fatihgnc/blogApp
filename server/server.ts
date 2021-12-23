@@ -3,8 +3,13 @@ import * as loader from '@grpc/proto-loader';
 import { BlogCrudServiceHandlers } from './proto/blogApp/BlogCrudService';
 import { UserServiceHandlers } from './proto/blogApp/UserService';
 import { ProtoGrpcType } from './proto/blogService';
-import { connectMongo } from './db/mongoose';
-import { signUserIn, signUserUp, logUserOut } from './auth/auth';
+import { BlogModel, connectMongo } from './db/mongoose';
+import {
+  signUserIn,
+  signUserUp,
+  logUserOut,
+  getUserFromToken,
+} from './auth/auth';
 // import { User } from './proto/blogApp/User';
 
 const PROTO_PATH = './blogService.proto';
@@ -33,15 +38,39 @@ server.bindAsync(
   `0.0.0.0:${PORT}`,
   grpc.ServerCredentials.createInsecure(),
   (err, port) => {
+    if (err) return console.log(err);
     console.log(`server up on port ${port}`);
     server.start();
   }
 );
 
 server.addService(blogService.service, {
-  CreateBlog(call, res) {
+  CreateBlog: (call, res) => {
     console.log('received call', call.request);
     res(null, { isSuccessful: true });
+  },
+  FetchBlogs: async (call, res) => {
+    console.log('received fetch blogs call!!!');
+
+    const { authToken } = call.request;
+
+    if (!authToken || authToken.length === 0)
+      return res({ code: 400, message: 'auth token is required!' });
+
+    const { _id, username } = await getUserFromToken(authToken);
+
+    // const blogs = await BlogModel.find({ authorId: _id }).exec();
+    // console.log(blogs);
+
+    res(null, {
+      blogs: [
+        {
+          authorUsername: username,
+          blogContent: 'my blog content',
+          blogTitle: 'my blog title',
+        },
+      ],
+    });
   },
 } as BlogCrudServiceHandlers);
 
