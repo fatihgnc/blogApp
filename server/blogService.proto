@@ -6,6 +6,7 @@ import "google/protobuf/timestamp.proto";
 package blogApp;
 
 service BlogCrudService {
+    rpc FetchBlogs (Token) returns (Blogs) {};
     rpc CreateBlog (InsertBlogRequest) returns (InsertBlogResponse) {};
 }
 
@@ -29,6 +30,16 @@ message SignInAndUpResponse {
 
 message Token {
     string authToken = 1;
+}
+
+message Blog {
+    string blogTitle = 1;
+    string blogContent = 2;
+    string authorUsername = 3;
+}
+
+message Blogs {
+    repeated Blog blogs = 1;
 }
 
 message InsertBlogResponse {

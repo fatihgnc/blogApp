@@ -10,7 +10,9 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   blogApp: {
+    Blog: MessageTypeDefinition
     BlogCrudService: SubtypeConstructor<typeof grpc.Client, _blogApp_BlogCrudServiceClient> & { service: _blogApp_BlogCrudServiceDefinition }
+    Blogs: MessageTypeDefinition
     InsertBlogRequest: MessageTypeDefinition
     InsertBlogResponse: MessageTypeDefinition
     SignInAndUpResponse: MessageTypeDefinition
