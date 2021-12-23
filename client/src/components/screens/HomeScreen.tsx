@@ -56,8 +56,7 @@ const HomeScreen = () => {
       backgroundColor='rgba(255,255,255,.85)'
       width='50%'
       padding='50px'>
-      Here is your main page! Your info:
-      {JSON.stringify(userContext.user)}
+      Here is your main page!
     </MainContent>
   );
 
