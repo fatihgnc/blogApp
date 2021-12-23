@@ -12,7 +12,8 @@ type UserContextObj = {
   signUserInOrUp: (
     method: 'SUP' | 'SIN',
     username: string,
-    password: string
+    password: string,
+    cb: (errMessage?: string) => void
   ) => void;
   logUserOut: (authToken: string) => void;
 };
@@ -58,8 +59,9 @@ const UserContextProvider: React.FC = (props) => {
   const signInAndUpHandler = (
     method: 'SUP' | 'SIN',
     username: string,
-    password: string
-  ) => {
+    password: string,
+    cb: (errMessage?: string) => void
+  ): string | void => {
     const signInOrUpReq = new UserInfo();
 
     signInOrUpReq.setUsername(username);
@@ -72,7 +74,7 @@ const UserContextProvider: React.FC = (props) => {
         const { errormessage: errMessage, authtoken: jwtToken } =
           res.toObject();
 
-        if (errMessage) return console.log(errMessage);
+        if (errMessage.trim().length > 0) return cb(errMessage);
 
         const payload = jwt.verify(jwtToken, 'mykey');
 
@@ -89,7 +91,7 @@ const UserContextProvider: React.FC = (props) => {
         const { errormessage: errMessage, authtoken: jwtToken } =
           res.toObject();
 
-        if (errMessage.trim().length > 0) return console.log(errMessage);
+        if (errMessage.trim().length > 0) return cb(errMessage);
 
         const payload = jwt.verify(jwtToken, 'mykey');
 

@@ -11,7 +11,10 @@ const LoginAndRegisterForm = () => {
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(true);
+  const [errMessage, setErrMessage] = useState<string | undefined>(undefined);
+  console.log(errMessage);
 
+  // get query string
   const search = useLocation().search;
   const params = new URLSearchParams(search);
 
@@ -32,6 +35,7 @@ const LoginAndRegisterForm = () => {
   const {
     inputValue: enteredUsername,
     inputHasError: usernameHasError,
+    inputIsValid: usernameIsValid,
     valMessage: usernameValidationMessage,
     onBlur: unameOnBlur,
     onChange: usernameOnChangeHandler,
@@ -45,6 +49,7 @@ const LoginAndRegisterForm = () => {
   const {
     inputValue: enteredPassword,
     inputHasError: passwordHasError,
+    inputIsValid: passwordIsValid,
     valMessage: passwordValidationMessage,
     onBlur: pswOnBlur,
     onChange: passwordOnChangeHandler,
@@ -59,6 +64,7 @@ const LoginAndRegisterForm = () => {
   const {
     inputValue: registrationUsername,
     inputHasError: registrationUsernameHasError,
+    inputIsValid: registrationUsernameIsValid,
     valMessage: registrationUsernameValidationMessage,
     onBlur: registrationUnameOnBlur,
     onChange: registrationUsernameOnChangeHandler,
@@ -72,6 +78,7 @@ const LoginAndRegisterForm = () => {
   const {
     inputValue: registrationPassword,
     inputHasError: registrationPasswordHasError,
+    inputIsValid: registrationPasswordIsValid,
     valMessage: registrationPasswordValidationMessage,
     onBlur: registrationPswOnBlur,
     onChange: registrationPasswordOnChangeHandler,
@@ -85,6 +92,7 @@ const LoginAndRegisterForm = () => {
   const {
     inputValue: confRegistrationPassword,
     inputHasError: confRegistrationPasswordHasError,
+    inputIsValid: confRegistrationPasswordIsValid,
     valMessage: confRegistrationValidationMessage,
     onBlur: confRegistrationPswOnBlur,
     onChange: confRegistrationPasswordOnChangeHandler,
@@ -96,11 +104,17 @@ const LoginAndRegisterForm = () => {
   );
 
   // SIGN IN AND UP FUNCTIONS
-  const sendSignupRequest = () => {
+  const sendSignUpRequest = () => {
     userCtx.signUserInOrUp(
       'SUP',
       registrationUsername as string,
-      registrationPassword as string
+      registrationPassword as string,
+      (err) => {
+        if (err) {
+          setErrMessage(err);
+          alert(err);
+        }
+      }
     );
   };
 
@@ -108,45 +122,61 @@ const LoginAndRegisterForm = () => {
     userCtx.signUserInOrUp(
       'SIN',
       enteredUsername as string,
-      enteredPassword as string
+      enteredPassword as string,
+      (err) => {
+        if (err) {
+          setErrMessage(err);
+          alert(err);
+        }
+      }
     );
   };
 
-  // handling form validity
+  const resetForm = () => {
+    if (isLogin) {
+      resetUsernameInput('');
+      resetPasswordInput('');
+      return;
+    }
+
+    resetRegistrationUsernameInput('');
+    resetRegistrationPasswordInput('');
+    resetConfRegistrationPasswordInput('');
+  };
+
+  // set overall form validity
   let loginFormValidity = false;
   let registrationFormValidity = false;
 
-  if (!usernameHasError && !passwordHasError) {
+  if (usernameIsValid && passwordIsValid) {
     loginFormValidity = true;
   }
 
   if (
-    !registrationUsernameHasError &&
-    !registrationPasswordHasError &&
-    !confRegistrationPasswordHasError
+    registrationUsernameIsValid &&
+    registrationPasswordIsValid &&
+    confRegistrationPasswordIsValid
   ) {
     registrationFormValidity = true;
   }
 
+  console.log(loginFormValidity);
+
   const handleSubmission = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (isLogin && !loginFormValidity) {
-      return;
-    }
 
     if (!isLogin && !registrationFormValidity) {
       return;
     }
 
-    if (isLogin) {
-      resetPasswordInput('');
-      resetUsernameInput('');
-    } else {
-      resetRegistrationUsernameInput('');
-      resetRegistrationPasswordInput('');
-      resetConfRegistrationPasswordInput('');
+    if (isLogin && !loginFormValidity) {
+      return;
     }
+
+    if (isLogin) sendSignInRequest();
+    else sendSignUpRequest();
+
+    resetForm();
   };
 
   const loginOrRegister = isLogin ? (
@@ -177,10 +207,7 @@ const LoginAndRegisterForm = () => {
           <span className={styles.invalid}>{passwordValidationMessage}</span>
         )}
       </div>
-      <button
-        type='submit'
-        className={styles['login-btn']}
-        onClick={sendSignInRequest}>
+      <button type='submit' className={styles['login-btn']}>
         Login
       </button>
     </>
@@ -234,10 +261,7 @@ const LoginAndRegisterForm = () => {
           </span>
         )}
       </div>
-      <button
-        type='submit'
-        className={styles['login-btn']}
-        onClick={sendSignupRequest}>
+      <button type='submit' className={styles['login-btn']}>
         Register
       </button>
     </>

@@ -8,7 +8,7 @@ const useInput = (
   const [enteredInput, setEnteredInput] = useState<boolean | string>(initValue);
   const [isTouched, setIsTouched] = useState<boolean>(false);
 
-  const valueIsValid = validate(enteredInput as string);
+  const valueIsValid = validate(enteredInput as string) || false;
 
   const resetValue = (val: string | boolean) => {
     setEnteredInput(val);
@@ -34,7 +34,7 @@ const useInput = (
 
   return {
     inputValue: enteredInput,
-    inputIsValid: valueIsValid || null,
+    inputIsValid: valueIsValid,
     inputHasError: hasError,
     valMessage: validationMessage,
     onChange: changeHandler,
