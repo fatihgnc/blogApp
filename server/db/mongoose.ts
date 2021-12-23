@@ -1,6 +1,6 @@
 import { Types, Schema, model, connect } from 'mongoose';
 
-export interface UserObj {
+interface UserObj {
   username: string;
   password: string;
   blogCount: number;
@@ -10,7 +10,7 @@ export interface UserObj {
 interface BlogObj {
   blogTitle: string;
   blogContent: string;
-  author: Types.ObjectId;
+  authorId: Types.ObjectId;
 }
 
 const userSchema = new Schema<UserObj>({
@@ -54,7 +54,7 @@ const blogSchema = new Schema<BlogObj>({
     min: [50, 'Username should be at least 50 characters!'],
     max: [500, 'Username should at most 500 characters!'],
   },
-  author: {
+  authorId: {
     type: Types.ObjectId,
     required: true,
     ref: 'User',
