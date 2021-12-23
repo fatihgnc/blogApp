@@ -36,6 +36,49 @@ export class BlogCrudServiceClient {
     this.options_ = options;
   }
 
+  methodInfoFetchBlogs = new grpcWeb.MethodDescriptor(
+    '/blogApp.BlogCrudService/FetchBlogs',
+    grpcWeb.MethodType.UNARY,
+    blogService_pb.Token,
+    blogService_pb.Blogs,
+    (request: blogService_pb.Token) => {
+      return request.serializeBinary();
+    },
+    blogService_pb.Blogs.deserializeBinary
+  );
+
+  fetchBlogs(
+    request: blogService_pb.Token,
+    metadata: grpcWeb.Metadata | null): Promise<blogService_pb.Blogs>;
+
+  fetchBlogs(
+    request: blogService_pb.Token,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: blogService_pb.Blogs) => void): grpcWeb.ClientReadableStream<blogService_pb.Blogs>;
+
+  fetchBlogs(
+    request: blogService_pb.Token,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: blogService_pb.Blogs) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/blogApp.BlogCrudService/FetchBlogs',
+        request,
+        metadata || {},
+        this.methodInfoFetchBlogs,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/blogApp.BlogCrudService/FetchBlogs',
+    request,
+    metadata || {},
+    this.methodInfoFetchBlogs);
+  }
+
   methodInfoCreateBlog = new grpcWeb.MethodDescriptor(
     '/blogApp.BlogCrudService/CreateBlog',
     grpcWeb.MethodType.UNARY,

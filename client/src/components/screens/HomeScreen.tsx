@@ -1,12 +1,34 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Blog } from '../../models/blog';
 import MainContentWrapper from '../layout/MainContentWrapper';
 import MainContent from '../layout/MainContentWrapper';
+import { BlogContext } from '../store/BlogProvider';
 import { UserContext } from '../store/UserProvider';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
+
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [err, setErr] = useState<any>();
+
   const userContext = useContext(UserContext);
+  const blogContext = useContext(BlogContext);
+
+  useEffect(() => {
+    async function callFetchBlogs() {
+      try {
+        const response = await blogContext.fetchBlogs();
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    callFetchBlogs()
+      .then((data) => setBlogs(data.blogsList))
+      .catch((err) => setErr(err.message));
+  }, [blogContext]);
 
   const mainContentComponent = !userContext.isAuth ? (
     <MainContentWrapper
@@ -56,7 +78,9 @@ const HomeScreen = () => {
       backgroundColor='rgba(255,255,255,.85)'
       width='50%'
       padding='50px'>
-      Here is your main page!
+      {err
+        ? JSON.stringify(err)
+        : blogs.map((blog, i) => <div key={i}>{JSON.stringify(blog)}</div>)}
     </MainContent>
   );
 

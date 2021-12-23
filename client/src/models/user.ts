@@ -1,23 +1,21 @@
-class User {
+export class User {
   _id: string;
   username: string;
   password: string;
   blogCount: number;
-  // blogs: Blog[];
+  exp: number;
 
   constructor(
     _id: string,
     username: string,
     password: string,
-    blogCount: number
-    // blogs: Blog[],
+    blogCount: number,
+    exp: number
   ) {
     this._id = _id;
     this.username = username;
     this.password = password;
     this.blogCount = blogCount;
-    // this.blogs = blogs;
+    this.exp = exp;
   }
 }
-
-export default User;

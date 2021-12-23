@@ -74,6 +74,52 @@ export namespace Token {
   }
 }
 
+export class Blog extends jspb.Message {
+  getBlogtitle(): string;
+  setBlogtitle(value: string): Blog;
+
+  getBlogcontent(): string;
+  setBlogcontent(value: string): Blog;
+
+  getAuthorusername(): string;
+  setAuthorusername(value: string): Blog;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Blog.AsObject;
+  static toObject(includeInstance: boolean, msg: Blog): Blog.AsObject;
+  static serializeBinaryToWriter(message: Blog, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Blog;
+  static deserializeBinaryFromReader(message: Blog, reader: jspb.BinaryReader): Blog;
+}
+
+export namespace Blog {
+  export type AsObject = {
+    blogtitle: string,
+    blogcontent: string,
+    authorusername: string,
+  }
+}
+
+export class Blogs extends jspb.Message {
+  getBlogsList(): Array<Blog>;
+  setBlogsList(value: Array<Blog>): Blogs;
+  clearBlogsList(): Blogs;
+  addBlogs(value?: Blog, index?: number): Blog;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Blogs.AsObject;
+  static toObject(includeInstance: boolean, msg: Blogs): Blogs.AsObject;
+  static serializeBinaryToWriter(message: Blogs, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Blogs;
+  static deserializeBinaryFromReader(message: Blogs, reader: jspb.BinaryReader): Blogs;
+}
+
+export namespace Blogs {
+  export type AsObject = {
+    blogsList: Array<Blog.AsObject>,
+  }
+}
+
 export class InsertBlogResponse extends jspb.Message {
   getIssuccessful(): boolean;
   setIssuccessful(value: boolean): InsertBlogResponse;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import User from '../../models/user';
+import { User } from '../../models/user';
 import { UserServiceClient } from '../../proto/BlogServiceServiceClientPb';
 import { Token, UserInfo } from '../../proto/blogService_pb';
 import jwt from 'jsonwebtoken';
@@ -31,7 +31,7 @@ export const UserContext = React.createContext<UserContextObj>({
 const removeTokenFromLS = () => localStorage.removeItem('authToken');
 const setTokenInLS = (token: string) =>
   localStorage.setItem('authToken', token);
-const getTokenFromLS = () => localStorage.getItem('authToken');
+export const getTokenFromLS = () => localStorage.getItem('authToken');
 
 const UserContextProvider: React.FC = (props) => {
   const authToken = getTokenFromLS();
