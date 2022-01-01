@@ -1,6 +1,7 @@
 import { User } from '../../models/user';
 import { UserAction, UserState } from '../reducer-types/types';
 import jwt from 'jsonwebtoken';
+import { RpcError } from 'grpc-web';
 
 const saveTokenInLS = (token: string) =>
     localStorage.setItem('authToken', token);
@@ -11,20 +12,17 @@ export const handleSignInAndUp = (state: UserState, action: UserAction) => {
     const token = action.payload?.token as string;
     const user = jwt.decode(token) as User;
     saveTokenInLS(token);
-    state.currentUser = user;
-    state.token = token;
-    state.isAuth = true;
     return {
         currentUser: user,
         token,
         isAuth: true,
-        authError: state.authError,
+        authError: null,
     };
 };
 
 export const handleLogout = (state: UserState, action: UserAction) => {
     removeTokenFromLS();
-    const errMessage = action.payload?.errMessage;
+    const errMessage = action.payload?.errMessage as unknown as RpcError;
     const newState = {
         currentUser: null,
         token: null,
@@ -38,6 +36,6 @@ export const handleLogout = (state: UserState, action: UserAction) => {
     }
     return {
         ...newState,
-        authError: state.authError,
+        authError: null,
     };
 };

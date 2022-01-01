@@ -1,3 +1,4 @@
+import { RpcError } from 'grpc-web';
 import { User } from '../../models/user';
 
 export enum UserActionTypes {
@@ -20,5 +21,5 @@ export interface UserState {
     isAuth: boolean;
     currentUser: User | null;
     token: string | null;
-    authError: string | null;
+    authError: RpcError | null;
 }
