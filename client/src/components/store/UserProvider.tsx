@@ -1,138 +1,114 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { Reducer, useReducer } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import { User } from '../../models/user';
 import { UserServiceClient } from '../../proto/BlogServiceServiceClientPb';
-import { Token, UserInfo } from '../../proto/blogService_pb';
 import jwt from 'jsonwebtoken';
-
-type UserContextObj = {
-  isAuth: boolean;
-  authToken: string | null;
-  user: User | null;
-  signUserInOrUp: (
-    method: 'SUP' | 'SIN',
-    username: string,
-    password: string,
-    cb: (errMessage?: string) => void
-  ) => void;
-  logUserOut: (authToken: string) => void;
-};
+import { UserAction, UserActionTypes, UserState } from '../reducer-types/types';
+import {
+    getTokenFromLS,
+    handleLogout,
+    handleSignInAndUp,
+} from '../reducer-actions/actions';
+import { RpcError } from 'grpc-web';
+// import { RpcError } from 'grpc-web';
 
 const client = new UserServiceClient('http://localhost:8080');
 
+type UserContextObj = {
+    isAuth: boolean;
+    user: User | null;
+    token: string | null;
+    client: UserServiceClient;
+    authError: RpcError | null;
+    signIn: (token: string) => void;
+    signUp: (token: string) => void;
+    logOut: (errMessage?: string) => void;
+};
+
 export const UserContext = React.createContext<UserContextObj>({
-  isAuth: false,
-  authToken: '',
-  user: null,
-  signUserInOrUp: () => {},
-  logUserOut: () => {},
+    isAuth: false,
+    user: null,
+    token: null,
+    client,
+    authError: null,
+    signIn: () => {},
+    signUp: () => {},
+    logOut: () => {},
 });
 
-const removeTokenFromLS = () => localStorage.removeItem('authToken');
-const setTokenInLS = (token: string) =>
-  localStorage.setItem('authToken', token);
-export const getTokenFromLS = () => localStorage.getItem('authToken');
+const initialState: UserState = {
+    isAuth: false,
+    currentUser: null,
+    token: null,
+    authError: null,
+};
+
+const authToken = getTokenFromLS() as string;
+
+if (authToken) {
+    const user = jwt.decode(authToken) as User;
+    initialState.currentUser = user;
+    initialState.isAuth = true;
+    initialState.token = authToken;
+    initialState.authError = null;
+}
+
+const reducer = (state: UserState, action: UserAction): UserState => {
+    switch (action.type) {
+        case 'USER_SIGN_IN':
+            return handleSignInAndUp(state, action);
+        case 'USER_SIGN_UP':
+            return handleSignInAndUp(state, action);
+        case 'USER_LOG_OUT':
+            return handleLogout(state, action);
+        default:
+            return state;
+    }
+};
 
 const UserContextProvider: React.FC = (props) => {
-  const authToken = getTokenFromLS();
-
-  const [user, setUser] = useState<User | null>();
-  const [isAuth, setIsAuth] = useState<boolean>(authToken ? true : false);
-
-  useEffect(() => {
-    if (authToken) {
-      jwt.verify(authToken as string, 'mykey', (err, userPayload) => {
-        if (err) {
-          removeTokenFromLS();
-          return console.log(err);
-        }
-
-        setUser(userPayload as User);
-      });
-    }
-  }, [authToken]);
-
-  const navigate = useNavigate();
-
-  // console.log(isAuth);
-
-  const signInAndUpHandler = (
-    method: 'SUP' | 'SIN',
-    username: string,
-    password: string,
-    cb: (errMessage?: string) => void
-  ): string | void => {
-    const signInOrUpReq = new UserInfo();
-
-    signInOrUpReq.setUsername(username);
-    signInOrUpReq.setPassword(password);
-
-    if (method === 'SIN') {
-      client.signUserIn(signInOrUpReq, null, (err, res) => {
-        if (err) return console.log(err);
-
-        const { errormessage: errMessage, authtoken: jwtToken } =
-          res.toObject();
-
-        if (errMessage.trim().length > 0) return cb(errMessage);
-
-        const payload = jwt.verify(jwtToken, 'mykey');
-
-        setTokenInLS(jwtToken);
-        setUser(payload as User);
-        setIsAuth(true);
-
-        navigate('/');
-      });
-    } else {
-      client.signUserUp(signInOrUpReq, null, (err, res) => {
-        if (err) return console.log(err);
-
-        const { errormessage: errMessage, authtoken: jwtToken } =
-          res.toObject();
-
-        if (errMessage.trim().length > 0) return cb(errMessage);
-
-        const payload = jwt.verify(jwtToken, 'mykey');
-
-        setTokenInLS(jwtToken);
-        setUser(payload as User);
-        setIsAuth(true);
-
-        navigate('/');
-      });
-    }
-  };
-
-  const logoutHandler = () => {
-    // create request
-    const token = new Token();
-    token.setAuthtoken(authToken as string);
-
-    // send request
-    client.logUserOut(token, null, (err, res) =>
-      err ? console.log(err) : null
+    const [state, dispatch] = useReducer<Reducer<UserState, UserAction>>(
+        reducer,
+        initialState
     );
 
-    removeTokenFromLS();
-    setIsAuth(false);
+    const signInHandler = (token: string) => {
+        dispatch({
+            type: UserActionTypes.USER_SIGN_IN,
+            payload: { token },
+        });
+    };
 
-    return navigate('auth?q=login');
-  };
+    const signUpHandler = (token: string) =>
+        dispatch({
+            type: UserActionTypes.USER_SIGN_UP,
+            payload: { token },
+        });
 
-  const contextValue: UserContextObj = {
-    user: user as User,
-    authToken,
-    isAuth,
-    signUserInOrUp: signInAndUpHandler,
-    logUserOut: logoutHandler,
-  };
+    const logoutHandler = (errMessage?: string) =>
+        dispatch({
+            type: UserActionTypes.USER_LOG_OUT,
+            payload: {
+                errMessage,
+            },
+        });
 
-  return (
-    <UserContext.Provider value={contextValue}>
-      {props.children}
-    </UserContext.Provider>
-  );
+    const contextValue: UserContextObj = {
+        user: state.currentUser,
+        isAuth: state.isAuth,
+        token: state.token,
+        authError: state.authError as RpcError,
+        client,
+        signIn: signInHandler,
+        signUp: signUpHandler,
+        logOut: logoutHandler,
+    };
+
+    return (
+        <UserContext.Provider value={contextValue}>
+            {props.children}
+        </UserContext.Provider>
+    );
 };
 
 export default UserContextProvider;
