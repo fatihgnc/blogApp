@@ -95,32 +95,6 @@ export async function signUserIn(
     }
 }
 
-export async function logUserOut(authToken: string) {
-    // check token
-    if (!authToken) return 'authToken is required!';
-    // verify token
-    const payload = jwt.verify(authToken, 'mykey') as jwtUser;
-    console.log(payload);
-    // verify payload
-    if (!payload) return 'invalid token';
-    // get username from token
-    const { username } = payload;
-    // query user
-    try {
-        const user = await UserModel.findOne({ username }).exec();
-        // check user
-        if (!user) {
-            return 'no user exists with this username';
-        }
-        // save it
-        await user.save();
-
-        return 'deleted auth token successfully';
-    } catch (err) {
-        throw err;
-    }
-}
-
 export async function getUserFromToken(authToken: string) {
     // get the user payload from token and extract the id
     try {
