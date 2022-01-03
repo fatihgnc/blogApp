@@ -1,19 +1,17 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
+// import "google/protobuf/empty.proto";
 
 package blogApp;
 
 service BlogCrudService {
     rpc FetchBlogs (Token) returns (Blogs) {};
-    rpc CreateBlog (InsertBlogRequest) returns (InsertBlogResponse) {};
+    rpc CreateBlog (InsertBlogRequest) returns (Blogs) {};
 }
 
 service UserService {
     rpc SignUserIn (UserInfo) returns (SignInAndUpResponse) {};
     rpc SignUserUp (UserInfo) returns (SignInAndUpResponse) {};
-    rpc LogUserOut (Token) returns (google.protobuf.Empty) {};
 }
 
 message UserInfo {
@@ -50,5 +48,4 @@ message InsertBlogRequest {
     int32 authorId = 1;
     string blogTitle = 2;
     string blogContent = 3;
-    google.protobuf.Timestamp creationTime = 4;
 }
