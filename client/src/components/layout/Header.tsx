@@ -36,12 +36,7 @@ const Header: React.FC = (props) => {
         </NavLink>
       </li>
       <li>
-        <button
-          onClick={() =>
-            userContext.logUserOut(userContext.authToken as string)
-          }>
-          Logout
-        </button>
+        <button onClick={() => userContext.logOut()}>Logout</button>
       </li>
     </nav>
   ) : (
