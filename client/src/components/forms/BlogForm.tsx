@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import useInput from '../hooks/use-input';
 import MainContentWrapper from '../layout/MainContentWrapper';
+import { BlogContext } from '../store/BlogProvider';
 import { UserContext } from '../store/UserProvider';
 
 import styles from './LoginAndRegisterForm.module.css';
 
 const BlogForm = () => {
     const userCtx = useContext(UserContext);
+    const blogCtx = useContext(BlogContext);
+
     const {
         inputValue: titleInput,
         inputHasError: titleHasError,
@@ -49,8 +52,8 @@ const BlogForm = () => {
     const handleSubmission = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        console.log(formValidity, titleInput, contentInput);
         if (!formValidity) return;
+
         resetForm();
     };
 
@@ -114,15 +117,25 @@ const BlogForm = () => {
                         )}
                     </div>
                     <div>
-                        <input
-                            type='submit'
-                            value='Add'
+                        <button
+                            onClick={async (_) => {
+                                try {
+                                    await blogCtx.createBlog(
+                                        titleInput as string,
+                                        contentInput as string,
+                                        userCtx.user?._id as string
+                                    );
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            }}
                             style={{
                                 borderRadius: '15px',
                                 cursor: 'pointer',
                                 backgroundColor: '#ddd',
-                            }}
-                        />
+                            }}>
+                            Add
+                        </button>
                     </div>
                     <input type='hidden' value={userCtx.user?._id} />
                 </form>

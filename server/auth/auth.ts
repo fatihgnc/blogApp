@@ -2,7 +2,7 @@ import grpc from '@grpc/grpc-js';
 import { UserModel } from '../db/mongoose';
 import { UserInfo__Output } from '../proto/blogApp/UserInfo';
 import { SignInAndUpResponse } from '../proto/blogApp/SignInAndUpResponse';
-import jwt from 'jsonwebtoken';
+import jwt, { verify } from 'jsonwebtoken';
 
 type jwtUser = {
     _id: string;
@@ -29,7 +29,7 @@ export async function signUserUp(
 
     // create the new user, create the jwt
     const user = new UserModel({ username, password });
-
+    console.log(user);
     const { blogCount, _id } = user;
 
     const authToken = jwt.sign(
@@ -40,7 +40,7 @@ export async function signUserUp(
             blogCount,
         },
         'mykey',
-        { expiresIn: '1m' }
+        { expiresIn: '10m' }
     );
 
     try {
@@ -84,7 +84,7 @@ export async function signUserIn(
                 blogCount,
             },
             'mykey',
-            { expiresIn: '10s' }
+            { expiresIn: '10m' }
         );
 
         await user.save();
@@ -95,15 +95,24 @@ export async function signUserIn(
     }
 }
 
-export async function getUserFromToken(authToken: string) {
+export async function getUserFromToken(token: string) {
     // get the user payload from token and extract the id
     try {
-        const userPayload = jwt.verify(authToken, 'mykey') as jwtUser;
+        const userPayload = verifyToken(token) as jwtUser;
         const { _id } = userPayload;
 
         // query the user with id
         const user = await UserModel.findById(_id).exec();
         return user;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export function verifyToken(token: string) {
+    try {
+        const decoded = jwt.verify(token, 'mykey');
+        return decoded;
     } catch (error) {
         throw error;
     }

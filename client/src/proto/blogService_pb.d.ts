@@ -1,7 +1,5 @@
 import * as jspb from 'google-protobuf'
 
-import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
-import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 
 
 export class UserInfo extends jspb.Message {
@@ -120,27 +118,9 @@ export namespace Blogs {
   }
 }
 
-export class InsertBlogResponse extends jspb.Message {
-  getIssuccessful(): boolean;
-  setIssuccessful(value: boolean): InsertBlogResponse;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): InsertBlogResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: InsertBlogResponse): InsertBlogResponse.AsObject;
-  static serializeBinaryToWriter(message: InsertBlogResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): InsertBlogResponse;
-  static deserializeBinaryFromReader(message: InsertBlogResponse, reader: jspb.BinaryReader): InsertBlogResponse;
-}
-
-export namespace InsertBlogResponse {
-  export type AsObject = {
-    issuccessful: boolean,
-  }
-}
-
 export class InsertBlogRequest extends jspb.Message {
-  getAuthorid(): number;
-  setAuthorid(value: number): InsertBlogRequest;
+  getAuthorid(): string;
+  setAuthorid(value: string): InsertBlogRequest;
 
   getBlogtitle(): string;
   setBlogtitle(value: string): InsertBlogRequest;
@@ -148,10 +128,8 @@ export class InsertBlogRequest extends jspb.Message {
   getBlogcontent(): string;
   setBlogcontent(value: string): InsertBlogRequest;
 
-  getCreationtime(): google_protobuf_timestamp_pb.Timestamp | undefined;
-  setCreationtime(value?: google_protobuf_timestamp_pb.Timestamp): InsertBlogRequest;
-  hasCreationtime(): boolean;
-  clearCreationtime(): InsertBlogRequest;
+  getAuthtoken(): string;
+  setAuthtoken(value: string): InsertBlogRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InsertBlogRequest.AsObject;
@@ -163,10 +141,10 @@ export class InsertBlogRequest extends jspb.Message {
 
 export namespace InsertBlogRequest {
   export type AsObject = {
-    authorid: number,
+    authorid: string,
     blogtitle: string,
     blogcontent: string,
-    creationtime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+    authtoken: string,
   }
 }
 

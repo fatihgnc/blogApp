@@ -10,6 +10,7 @@ import {
     handleSignInAndUp,
 } from '../reducer-actions/actions';
 import { RpcError } from 'grpc-web';
+import { UserInfo } from '../../proto/blogService_pb';
 // import { RpcError } from 'grpc-web';
 
 const client = new UserServiceClient('http://localhost:8080');
@@ -20,8 +21,8 @@ type UserContextObj = {
     token: string | null;
     client: UserServiceClient;
     authError: RpcError | null;
-    signIn: (token: string) => void;
-    signUp: (token: string) => void;
+    signIn: (username: string, password: string) => void;
+    signUp: (username: string, password: string) => void;
     logOut: (errMessage?: string) => void;
 };
 
@@ -72,18 +73,55 @@ const UserContextProvider: React.FC = (props) => {
         initialState
     );
 
-    const signInHandler = (token: string) => {
-        dispatch({
-            type: UserActionTypes.USER_SIGN_IN,
-            payload: { token },
-        });
+    const signInHandler = async (username: string, password: string) => {
+        const signInReq = new UserInfo();
+        signInReq.setUsername(username);
+        signInReq.setPassword(password);
+
+        let authToken;
+
+        try {
+            const { authtoken: token, errormessage: errMessage } = (
+                await client.signUserIn(signInReq, null)
+            ).toObject();
+
+            if (errMessage.trim().length > 0) {
+                throw errMessage;
+            }
+
+            authToken = token;
+
+            dispatch({
+                type: UserActionTypes.USER_SIGN_IN,
+                payload: { token: authToken },
+            });
+        } catch (error) {
+            throw error;
+        }
     };
 
-    const signUpHandler = (token: string) =>
-        dispatch({
-            type: UserActionTypes.USER_SIGN_UP,
-            payload: { token },
-        });
+    const signUpHandler = async (username: string, password: string) => {
+        const signUpReq = new UserInfo();
+        signUpReq.setUsername(username);
+        signUpReq.setPassword(password);
+
+        try {
+            const { authtoken: token, errormessage: errMessage } = (
+                await client.signUserUp(signUpReq, null)
+            ).toObject();
+
+            if (errMessage.trim().length > 0) {
+                throw errMessage;
+            }
+
+            dispatch({
+                type: UserActionTypes.USER_SIGN_UP,
+                payload: { token },
+            });
+        } catch (error) {
+            throw error;
+        }
+    };
 
     const logoutHandler = (errMessage?: string) =>
         dispatch({

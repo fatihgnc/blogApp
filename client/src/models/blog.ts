@@ -1,11 +1,15 @@
 export class Blog {
-  blogTitle: string;
-  blogContent: string;
-  authorUsername: string;
+    blogtitle: string;
+    blogcontent: string;
+    authorusername: string;
 
-  constructor(blogTitle: string, blogContent: string, authorUsername: string) {
-    this.blogTitle = blogTitle;
-    this.blogContent = blogContent;
-    this.authorUsername = authorUsername;
-  }
+    constructor(
+        blogTitle: string,
+        blogContent: string,
+        authorUsername: string
+    ) {
+        this.blogtitle = blogTitle;
+        this.blogcontent = blogContent;
+        this.authorusername = authorUsername;
+    }
 }

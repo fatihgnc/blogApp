@@ -9,22 +9,17 @@ import AddBlogScreen from './screens/AddBlogScreen';
 
 const Router = () => {
     return (
-        <Routes>
-            <Route path='/' element={<MainLayout />}>
-                <Route
-                    index
-                    element={
-                        <BlogContextProvider>
-                            <HomeScreen />
-                        </BlogContextProvider>
-                    }
-                />
-                <Route path='profile' element={<ProfileScreen />} />
-                <Route path='blogs' element={<BlogsScreen />} />
-                <Route path='addBlog' element={<AddBlogScreen />} />
-                <Route path='auth' element={<LoginAndRegisterScreen />} />
-            </Route>
-        </Routes>
+        <BlogContextProvider>
+            <Routes>
+                <Route path='/' element={<MainLayout />}>
+                    <Route index element={<HomeScreen />} />
+                    <Route path='profile' element={<ProfileScreen />} />
+                    <Route path='blogs' element={<BlogsScreen />} />
+                    <Route path='addBlog' element={<AddBlogScreen />} />
+                    <Route path='auth' element={<LoginAndRegisterScreen />} />
+                </Route>
+            </Routes>
+        </BlogContextProvider>
     );
 };
 

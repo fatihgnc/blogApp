@@ -4,7 +4,12 @@ import { BlogCrudServiceHandlers } from './proto/blogApp/BlogCrudService';
 import { UserServiceHandlers } from './proto/blogApp/UserService';
 import { ProtoGrpcType } from './proto/blogService';
 import { BlogModel, connectMongo } from './db/mongoose';
-import { signUserIn, signUserUp, getUserFromToken } from './auth/auth';
+import {
+    signUserIn,
+    signUserUp,
+    getUserFromToken,
+    verifyToken,
+} from './auth/auth';
 // import { User } from './proto/blogApp/User';
 
 const PROTO_PATH = './blogService.proto';
@@ -40,38 +45,65 @@ server.bindAsync(
 );
 
 server.addService(blogService.service, {
-    CreateBlog: (call, res) => {
-        console.log('received call', call.request);
-        res(null, { blogs: [] });
+    CreateBlog: async (call, res) => {
+        const { authToken, blogTitle, blogContent, authorId } = call.request;
+        console.log('received call', authToken);
+
+        if (!authToken) {
+            return res({ code: 401, message: 'Token is required!' });
+        }
+
+        if (!blogTitle || !blogContent) {
+            return res({
+                code: 400,
+                message: 'Blog title and blog content is required!',
+            });
+        }
+
+        if (!authorId) {
+            return res({ code: 401, message: 'You are not authenticated!' });
+        }
+
+        const blog = new BlogModel({ blogContent, blogTitle, authorId });
+        let blogs;
+        try {
+            await blog.save();
+            blogs = await BlogModel.find({ authorId }).exec();
+        } catch (error) {
+            return res({ code: 500, message: error.message });
+        }
+
+        try {
+            verifyToken(authToken);
+            res(null, { blogs });
+        } catch (error) {
+            res({ code: 401, message: error.message });
+        }
     },
     FetchBlogs: async (call, res) => {
         console.log('received fetch blogs call!!!');
-
         const { authToken } = call.request;
-        console.log(authToken);
+
         if (!authToken || authToken.length === 0)
             return res({ code: 400, message: 'auth token is required!' });
 
         try {
             const { _id, username } = await getUserFromToken(authToken);
             console.log(username);
-            // const blogs = await BlogModel.find({ authorId: _id }).exec();
-            // console.log(blogs);
+            const blogs = (await BlogModel.find({ authorId: _id }).exec()).map(
+                (blog) => ({
+                    blogTitle: blog.blogTitle,
+                    blogContent: blog.blogContent,
+                    authorUsername: username,
+                })
+            );
 
-            res(null, {
-                blogs: [
-                    {
-                        authorUsername: username,
-                        blogContent: 'my blog content',
-                        blogTitle: 'my blog title',
-                    },
-                ],
-            });
+            res(null, { blogs });
         } catch (error) {
-            console.log('caught error');
+            console.log('Caught error in fetch blogs handler!');
             res({
                 code: 401,
-                message: 'invalid token',
+                message: error.message,
             });
         }
     },

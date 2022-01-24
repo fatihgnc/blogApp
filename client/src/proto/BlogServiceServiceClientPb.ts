@@ -14,7 +14,6 @@
 import * as grpcWeb from 'grpc-web';
 
 import * as blogService_pb from './blogService_pb';
-import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
 
 
 export class BlogCrudServiceClient {
@@ -83,28 +82,28 @@ export class BlogCrudServiceClient {
     '/blogApp.BlogCrudService/CreateBlog',
     grpcWeb.MethodType.UNARY,
     blogService_pb.InsertBlogRequest,
-    blogService_pb.InsertBlogResponse,
+    blogService_pb.Blogs,
     (request: blogService_pb.InsertBlogRequest) => {
       return request.serializeBinary();
     },
-    blogService_pb.InsertBlogResponse.deserializeBinary
+    blogService_pb.Blogs.deserializeBinary
   );
 
   createBlog(
     request: blogService_pb.InsertBlogRequest,
-    metadata: grpcWeb.Metadata | null): Promise<blogService_pb.InsertBlogResponse>;
+    metadata: grpcWeb.Metadata | null): Promise<blogService_pb.Blogs>;
 
   createBlog(
     request: blogService_pb.InsertBlogRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.RpcError,
-               response: blogService_pb.InsertBlogResponse) => void): grpcWeb.ClientReadableStream<blogService_pb.InsertBlogResponse>;
+               response: blogService_pb.Blogs) => void): grpcWeb.ClientReadableStream<blogService_pb.Blogs>;
 
   createBlog(
     request: blogService_pb.InsertBlogRequest,
     metadata: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.RpcError,
-               response: blogService_pb.InsertBlogResponse) => void) {
+               response: blogService_pb.Blogs) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
@@ -227,49 +226,6 @@ export class UserServiceClient {
     request,
     metadata || {},
     this.methodInfoSignUserUp);
-  }
-
-  methodInfoLogUserOut = new grpcWeb.MethodDescriptor(
-    '/blogApp.UserService/LogUserOut',
-    grpcWeb.MethodType.UNARY,
-    blogService_pb.Token,
-    google_protobuf_empty_pb.Empty,
-    (request: blogService_pb.Token) => {
-      return request.serializeBinary();
-    },
-    google_protobuf_empty_pb.Empty.deserializeBinary
-  );
-
-  logUserOut(
-    request: blogService_pb.Token,
-    metadata: grpcWeb.Metadata | null): Promise<google_protobuf_empty_pb.Empty>;
-
-  logUserOut(
-    request: blogService_pb.Token,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.RpcError,
-               response: google_protobuf_empty_pb.Empty) => void): grpcWeb.ClientReadableStream<google_protobuf_empty_pb.Empty>;
-
-  logUserOut(
-    request: blogService_pb.Token,
-    metadata: grpcWeb.Metadata | null,
-    callback?: (err: grpcWeb.RpcError,
-               response: google_protobuf_empty_pb.Empty) => void) {
-    if (callback !== undefined) {
-      return this.client_.rpcCall(
-        this.hostname_ +
-          '/blogApp.UserService/LogUserOut',
-        request,
-        metadata || {},
-        this.methodInfoLogUserOut,
-        callback);
-    }
-    return this.client_.unaryCall(
-    this.hostname_ +
-      '/blogApp.UserService/LogUserOut',
-    request,
-    metadata || {},
-    this.methodInfoLogUserOut);
   }
 
 }
